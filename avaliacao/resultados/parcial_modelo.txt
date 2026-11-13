@@ -1,1 +1,1 @@
-groq/llama-3.1-8b-instant
+groq/openai/gpt-oss-120b
