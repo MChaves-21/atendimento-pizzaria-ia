@@ -1,0 +1,33 @@
+{
+  "execucao": {
+    "modelo": "gemini/gemini-2.5-flash-lite",
+    "casos": 8,
+    "total_casos": 49,
+    "completo": false,
+    "data": "2026-11-13"
+  },
+  "resumo": {
+    "monolitico": {
+      "casos": 8,
+      "inventadas_pct": 0.0,
+      "corretas_pct": 100.0,
+      "por_categoria": {
+        "cardapio": {
+          "inventadas_pct": 0.0,
+          "corretas_pct": 100.0
+        }
+      }
+    },
+    "subagentes": {
+      "casos": 8,
+      "inventadas_pct": 0.0,
+      "corretas_pct": 100.0,
+      "por_categoria": {
+        "cardapio": {
+          "inventadas_pct": 0.0,
+          "corretas_pct": 100.0
+        }
+      }
+    }
+  }
+}

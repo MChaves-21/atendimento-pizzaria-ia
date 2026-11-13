@@ -1,0 +1,57 @@
+id,categoria,modo,resposta,inventou,correta,motivos
+card-01,cardapio,monolitico,"Olá! Bem-vindo(a) à Pizzaria Bella Massa! 🍕
+
+Uma pizza grande de Calabresa custa R$ 60,00.
+
+Gostaria de saber mais alguma coisa sobre nosso cardápio ou fazer seu pedido?",False,True,
+card-01,cardapio,subagentes,"A pizza grande de calabresa custa R$ 60,00. Ela é feita com muçarela, calabresa fatiada e cebola roxa.",False,True,
+card-02,cardapio,monolitico,"Olá! Bem-vindo à Pizzaria Bella Massa! 😊
+
+A nossa pizza Quatro Queijos tamanho M (6 fatias, 30 cm) custa R$ 54,00.
+
+Gostaria de saber mais alguma coisa sobre o nosso cardápio ou já quer fazer o seu pedido?",False,True,
+card-02,cardapio,subagentes,"A Quatro Queijos média custa R$ 54,00. Ela é uma opção vegetariana deliciosa com muçarela, provolone, gorgonzola e parmesão.",False,True,
+card-03,cardapio,monolitico,"Olá! Bem-vindo(a) à Pizzaria Bella Massa! 😊
+
+Sim, temos opções vegetarianas deliciosas no nosso cardápio! Atualmente, nossas pizzas vegetarianas são:
+
+*   **Margherita:** molho de tomate, muçarela, tomate e manjericão.
+*   **Quatro Queijos:** muçarela, provolone, gorgonzola e parmesão.
+*   **Chocolate com Morango:** chocolate ao leite e morango (essa é uma opção doce!).
+
+Gostaria de saber mais sobre alguma delas ou prefere ver o cardápio completo?",False,True,
+card-03,cardapio,subagentes,"Sim, temos opções vegetarianas! As pizzas Margherita e Quatro Queijos são vegetarianas.",False,True,
+card-04,cardapio,monolitico,"Olá! Bem-vindo à Pizzaria Bella Massa! 😊
+
+Temos três tamanhos de pizza:
+
+*   **P:** 4 fatias (aproximadamente 25 cm)
+*   **M:** 6 fatias (aproximadamente 30 cm)
+*   **G:** 8 fatias (aproximadamente 35 cm)
+
+Posso ajudar com mais alguma informação ou você já gostaria de fazer seu pedido?",False,True,
+card-04,cardapio,subagentes,"Temos os tamanhos P com 4 fatias (25 cm), M com 6 fatias (30 cm) e G com 8 fatias (35 cm).",False,True,
+card-05,cardapio,monolitico,"Olá! Bem-vindo(a) à Pizzaria Bella Massa! 😊
+
+A nossa pizza de Carne de Sol com Nata vem com carne de sol desfiada, nata e cebola caramelizada. Uma delícia!
+
+Gostaria de saber mais alguma coisa sobre o nosso cardápio ou já quer fazer o seu pedido?",False,True,
+card-05,cardapio,subagentes,"Nossa pizza de Carne de Sol leva carne de sol desfiada, nata e cebola caramelizada. Ela está disponível nos tamanhos P por R$ 44,00, M por R$ 58,00 e G por R$ 74,00.",False,True,
+card-06,cardapio,monolitico,"Olá! Bem-vindo(a) à Pizzaria Bella Massa! 😊
+
+Sim, temos uma opção de pizza doce: a **Chocolate com Morango** (chocolate ao leite e morango). Ela está disponível nos tamanhos P, M e G.
+
+Gostaria de saber mais sobre ela ou prefere ver nossas opções salgadas?",False,True,
+card-06,cardapio,subagentes,"Sim, temos a pizza de Chocolate com Morango, que é uma opção doce e vegetariana. Ela custa R$ 36,00 (P), R$ 48,00 (M) e R$ 60,00 (G).",False,True,
+card-07,cardapio,monolitico,"Olá! Bem-vindo(a) à Pizzaria Bella Massa! 😊
+
+A borda recheada custa R$ 8,00 e pode ser de catupiry ou cheddar.
+
+Gostaria de saber mais sobre nossas pizzas ou já quer fazer seu pedido?",False,True,
+card-07,cardapio,subagentes,"Nossa borda recheada com catupiry ou cheddar custa R$ 8,00 a mais.",False,True,
+card-08,cardapio,monolitico,"Olá! Bem-vindo(a) à Pizzaria Bella Massa! 😊
+
+O refrigerante de 2 litros custa R$ 14,00.
+
+Posso te ajudar com mais alguma informação sobre nosso cardápio ou com seu pedido?",False,True,
+card-08,cardapio,subagentes,"Nosso refrigerante de 2 litros custa R$ 14,00. Temos também refrigerante em lata de 350 ml por R$ 6,00.",False,True,
