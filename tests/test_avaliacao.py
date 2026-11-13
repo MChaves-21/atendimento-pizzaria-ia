@@ -70,3 +70,34 @@ def test_rodada_completa_com_modelo_simulado(pizzaria, tmp_path):
     relatorio = (tmp_path / "relatorio.md").read_text(encoding="utf-8")
     assert "| Prompt único | 100.0% |" in relatorio
     assert (tmp_path / "respostas.csv").exists()
+
+
+def test_avaliacao_retoma_de_onde_parou(pizzaria, tmp_path):
+    """Se a API recusar por limite, o que já rodou fica salvo e a próxima execução continua."""
+    import httpx
+    import pytest
+    from avaliacao.avaliar import LimiteDaAPI, carregar_parcial
+
+    casos = [caso(id=f"c{i}", mensagens=["Aceita Pix?"], deve_conter_algum=["pix"]) for i in range(3)]
+    parcial = tmp_path / "parcial.jsonl"
+    chamadas = {"n": 0}
+
+    def responder(sistema, mensagens, json_mode):
+        chamadas["n"] += 1
+        if chamadas["n"] > 3:  # a "API" acaba no meio
+            req = httpx.Request("POST", "https://api")
+            raise httpx.HTTPStatusError("429", request=req, response=httpx.Response(429, request=req))
+        if sistema.startswith("Você classifica"):
+            return json.dumps({"fase": "info"})
+        return "Aceitamos Pix, sim!"
+
+    with pytest.raises(LimiteDaAPI):
+        rodar(lambda: LLMSimulado(responder), ["monolitico", "subagentes"], casos, parcial=parcial)
+    feitos = carregar_parcial(parcial)
+    # monolítico gasta 1 chamada; subagentes, 2 (roteador + resposta): a 4ª chamada já falha
+    assert [(n.id, n.modo) for n in feitos] == [("c0", "monolitico"), ("c0", "subagentes")]
+
+    chamadas["n"] = -100  # "no dia seguinte" a API volta
+    notas = rodar(lambda: LLMSimulado(responder), ["monolitico", "subagentes"], casos, parcial=parcial)
+    assert len(notas) == 6
+    assert len({(n.id, n.modo) for n in notas}) == 6  # nada repetido

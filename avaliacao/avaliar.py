@@ -122,7 +122,8 @@ def salvar(notas: list[Nota], resumo: dict, info: dict, pasta: Path = RESULTADOS
     linhas = [
         "# Resultado da avaliação",
         "",
-        f"Modelo: `{info['modelo']}` · {info['casos']} casos · {info['data']}",
+        f"Modelo: `{info['modelo']}` · {info['casos']} casos · {info['data']}"
+        + ("" if info.get("completo", True) else f" · **parcial: {info['casos']} de {info.get('total_casos')} casos**"),
         "",
         "| Versão | Respostas inventadas | Respostas corretas |",
         "|---|---|---|",
@@ -176,17 +177,50 @@ def _grafico(resumo: dict, destino: Path, info: dict) -> None:
     plt.close(fig)
 
 
+class LimiteDaAPI(Exception):
+    """A API recusou por limite (429) mesmo depois das retentativas."""
+
+
+def _e_limite(erro: Exception) -> bool:
+    resp = getattr(erro, "response", None)
+    return getattr(resp, "status_code", None) == 429
+
+
+def carregar_parcial(arquivo: Path) -> list[Nota]:
+    if not arquivo.exists():
+        return []
+    with open(arquivo, encoding="utf-8") as f:
+        return [Nota(**json.loads(l)) for l in f if l.strip()]
+
+
 def rodar(fabrica_llm: Callable[[], LLM], modos: list[str], casos: list[dict],
-          pausa: float = 0.0, progresso: bool = False) -> list[Nota]:
+          pausa: float = 0.0, progresso: bool = False, parcial: Path | None = None) -> list[Nota]:
+    """Roda caso a caso, alternando as versões (assim um resultado parcial já é comparável).
+
+    Com `parcial`, cada nota é gravada assim que sai e as já gravadas são puladas:
+    se o limite diário da API acabar, a próxima execução continua de onde parou.
+    """
     pizzaria = carregar()
-    notas = []
-    for modo in modos:
-        for i, caso in enumerate(casos, 1):
-            notas.append(rodar_caso(caso, modo, fabrica_llm(), pizzaria))
+    notas = carregar_parcial(parcial) if parcial else []
+    feitos = {(n.modo, n.id) for n in notas}
+    for i, caso in enumerate(casos, 1):
+        for modo in modos:
+            if (modo, caso["id"]) in feitos:
+                continue
+            try:
+                nota = rodar_caso(caso, modo, fabrica_llm(), pizzaria)
+            except Exception as erro:
+                if _e_limite(erro):
+                    raise LimiteDaAPI(f"limite da API atingido em {caso['id']} ({modo})") from erro
+                raise
+            notas.append(nota)
+            if parcial:
+                parcial.parent.mkdir(parents=True, exist_ok=True)
+                with open(parcial, "a", encoding="utf-8") as f:
+                    f.write(json.dumps(asdict(nota), ensure_ascii=False) + "\n")
             if progresso:
-                n = notas[-1]
-                status = "inventou" if n.inventou else ("ok" if n.correta else "incompleta")
-                print(f"[{modo}] {i}/{len(casos)} {caso['id']}: {status}")
+                status = "inventou" if nota.inventou else ("ok" if nota.correta else "incompleta")
+                print(f"[{modo}] {i}/{len(casos)} {caso['id']}: {status}", flush=True)
             if pausa:
                 time.sleep(pausa)
     return notas
@@ -197,23 +231,50 @@ def main() -> None:
     ap.add_argument("--modos", nargs="+", default=["monolitico", "subagentes"])
     ap.add_argument("--pausa", type=float, default=2.0, help="segundos entre casos (limite do plano gratuito)")
     ap.add_argument("--casos", type=Path, default=CASOS)
+    ap.add_argument("--recomecar", action="store_true", help="apaga o progresso salvo e roda tudo de novo")
     args = ap.parse_args()
 
     import os
     from datetime import date
 
     casos = carregar_casos(args.casos)
-    modelo = getattr(do_ambiente(), "modelo", "?")
-    notas = rodar(do_ambiente, args.modos, casos, args.pausa, progresso=True)
-    resumo = resumir(notas)
+    modelo = f"{os.getenv('LLM_PROVEDOR', 'gemini')}/{getattr(do_ambiente(), 'modelo', '?')}"
+    parcial = RESULTADOS / "parcial.jsonl"
+    meta = RESULTADOS / "parcial_modelo.txt"
+    if args.recomecar or (meta.exists() and meta.read_text().strip() != modelo):
+        parcial.unlink(missing_ok=True)  # outro modelo: não mistura resultados
+    RESULTADOS.mkdir(parents=True, exist_ok=True)
+    meta.write_text(modelo)
+
+    completo = True
+    try:
+        notas = rodar(do_ambiente, args.modos, casos, args.pausa, progresso=True, parcial=parcial)
+    except LimiteDaAPI as e:
+        completo = False
+        print(f"\n{e}. O progresso foi salvo: rode de novo depois (ex.: amanhã) para continuar.")
+        notas = carregar_parcial(parcial)
+
+    # Só entram no resumo os casos que as duas versões já responderam (comparação justa)
+    por_caso: dict[str, set] = {}
+    for n in notas:
+        por_caso.setdefault(n.id, set()).add(n.modo)
+    comparaveis = [n for n in notas if por_caso[n.id] >= set(args.modos)]
+    if not comparaveis:
+        print("Nenhum caso respondido pelas duas versões ainda.")
+        return
+
+    n_casos = len({n.id for n in comparaveis})
     info = {
-        "modelo": f"{os.getenv('LLM_PROVEDOR', 'gemini')}/{modelo}",
-        "casos": len(casos),
+        "modelo": modelo,
+        "casos": n_casos,
+        "total_casos": len(casos),
+        "completo": completo and n_casos == len(casos),
         "data": date.today().isoformat(),
     }
-    salvar(notas, resumo, info)
+    resumo = resumir(comparaveis)
+    salvar(comparaveis, resumo, info)
     print(json.dumps(resumo, ensure_ascii=False, indent=2))
-    print(f"\nRelatório em {RESULTADOS / 'relatorio.md'}")
+    print(f"\n{n_casos} de {len(casos)} casos. Relatório em {RESULTADOS / 'relatorio.md'}")
 
 
 if __name__ == "__main__":

@@ -39,7 +39,8 @@ class _ComRetentativa:
         for tentativa in range(self.tentativas):
             r = httpx.post(url, timeout=60, **kw)
             if r.status_code == 429 or r.status_code >= 500:
-                time.sleep(2 ** tentativa * 2)
+                # limite por minuto costuma liberar em até 1 min; o diário, não
+                time.sleep(float(r.headers.get("retry-after") or [5, 15, 30, 60][tentativa]))
                 continue
             r.raise_for_status()
             return r.json()

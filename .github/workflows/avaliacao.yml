@@ -2,6 +2,7 @@ name: Avaliação com modelo real
 
 # Roda à mão (aba Actions → "Avaliação com modelo real" → Run workflow).
 # Precisa do secret GEMINI_API_KEY (ou GROQ_API_KEY) no repositório.
+# Se o limite diário da API acabar, o progresso é salvo: rode de novo depois para continuar.
 on:
   workflow_dispatch:
     inputs:
@@ -37,10 +38,12 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: python -m avaliacao.avaliar --pausa ${{ inputs.pausa }}
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: resultados
           path: avaliacao/resultados/
       - name: Salvar resultados no repositório
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

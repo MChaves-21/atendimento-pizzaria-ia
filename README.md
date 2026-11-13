@@ -51,6 +51,8 @@ export $(cat .env | xargs)
 python -m avaliacao.avaliar       # gera avaliacao/resultados/: relatorio.md, grafico.png, respostas.csv
 ```
 
+Se o limite diário do plano gratuito acabar no meio, o progresso fica salvo em `avaliacao/resultados/parcial.jsonl`: rode o mesmo comando depois e ele continua de onde parou. Também dá para rodar pelo GitHub Actions (workflow **Avaliação com modelo real**), com a chave como secret do repositório.
+
 ### Resultados
 
 _Ainda não rodei a avaliação com um modelo real. Quando rodar, o `relatorio.md` e o gráfico gerados entram aqui, com o modelo e a data._
@@ -88,7 +90,7 @@ avaliacao/
   casos.jsonl      # 49 casos de teste
   avaliar.py       # roda as duas versões e gera o relatório
 dados/pizzaria.json
-tests/             # 50 testes com modelo simulado (rodam sem chave e sem internet)
+tests/             # 51 testes com modelo simulado (rodam sem chave e sem internet)
 ```
 
 ## ✅ Testes
