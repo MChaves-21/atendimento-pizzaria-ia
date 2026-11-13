@@ -35,7 +35,7 @@ jobs:
           LLM_PROVEDOR: ${{ inputs.provedor }}
           LLM_MODELO: ${{ inputs.modelo }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY || secrets.GEMINI_API_KEY }}
         run: python -m avaliacao.avaliar --pausa ${{ inputs.pausa }}
       - uses: actions/upload-artifact@v4
         if: always()
