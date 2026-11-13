@@ -1,0 +1,52 @@
+{
+  "nome": "Pizzaria Bella Massa",
+  "observacao": "Empresa, cardápio, preços e bairros FICTÍCIOS, criados só para este projeto.",
+  "cidade": "Fortaleza - CE",
+  "horario": {
+    "dias": "terça a domingo",
+    "abre": "18:00",
+    "fecha": "23:30",
+    "fechado": "segunda-feira"
+  },
+  "pizzas": [
+    {"id": "margherita", "nome": "Margherita", "ingredientes": "molho de tomate, muçarela, tomate e manjericão", "veggie": true, "precos": {"P": 34.0, "M": 46.0, "G": 58.0}},
+    {"id": "calabresa", "nome": "Calabresa", "ingredientes": "muçarela, calabresa fatiada e cebola roxa", "veggie": false, "precos": {"P": 36.0, "M": 48.0, "G": 60.0}},
+    {"id": "frango-catupiry", "nome": "Frango com Catupiry", "ingredientes": "frango desfiado, catupiry e milho", "veggie": false, "precos": {"P": 38.0, "M": 52.0, "G": 64.0}},
+    {"id": "quatro-queijos", "nome": "Quatro Queijos", "ingredientes": "muçarela, provolone, gorgonzola e parmesão", "veggie": true, "precos": {"P": 40.0, "M": 54.0, "G": 68.0}},
+    {"id": "portuguesa", "nome": "Portuguesa", "ingredientes": "presunto, ovo, cebola, azeitona e muçarela", "veggie": false, "precos": {"P": 38.0, "M": 52.0, "G": 64.0}},
+    {"id": "carne-de-sol", "nome": "Carne de Sol com Nata", "ingredientes": "carne de sol desfiada, nata e cebola caramelizada", "veggie": false, "precos": {"P": 44.0, "M": 58.0, "G": 74.0}},
+    {"id": "chocolate", "nome": "Chocolate com Morango", "ingredientes": "chocolate ao leite e morango", "veggie": true, "precos": {"P": 36.0, "M": 48.0, "G": 60.0}}
+  ],
+  "tamanhos": {
+    "P": "4 fatias (25 cm)",
+    "M": "6 fatias (30 cm)",
+    "G": "8 fatias (35 cm)"
+  },
+  "bebidas": [
+    {"id": "refri-lata", "nome": "Refrigerante lata 350 ml", "preco": 6.0},
+    {"id": "refri-2l", "nome": "Refrigerante 2 L", "preco": 14.0},
+    {"id": "suco", "nome": "Suco natural 500 ml (caju, acerola ou maracujá)", "preco": 9.0},
+    {"id": "agua", "nome": "Água mineral 500 ml", "preco": 4.0}
+  ],
+  "regras_pedido": {
+    "meio_a_meio": "Pizza M ou G pode ser meio a meio; o preço é o do sabor mais caro.",
+    "borda_recheada": {"descricao": "Borda recheada de catupiry ou cheddar", "preco": 8.0},
+    "pagamento": ["Pix", "cartão de crédito", "cartão de débito", "dinheiro"],
+    "pedido_minimo": 30.0
+  },
+  "entrega": {
+    "tempo_medio_min": 45,
+    "bairros": {
+      "Aldeota": 6.0,
+      "Meireles": 6.0,
+      "Dionísio Torres": 7.0,
+      "Cocó": 8.0,
+      "Papicu": 8.0,
+      "Benfica": 9.0,
+      "Fátima": 7.0,
+      "Varjota": 6.0
+    },
+    "retirada_no_balcao": true,
+    "endereco_loja": "Rua Fictícia, 123 - Aldeota"
+  }
+}
