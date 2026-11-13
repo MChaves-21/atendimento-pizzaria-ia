@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from . import pedido as ped
 from .dados import Pizzaria, moeda
 from .llm import LLM, Mensagem, extrair_json
-from .verificador import verificar
+from .verificador import valores_citados, verificar
 
 ESTILO = (
     "Responda em português do Brasil, em no máximo 3 frases, de forma simpática e direta. "
@@ -32,8 +32,9 @@ class Saida:
 def _com_verificacao(llm: LLM, sistema: str, historico: list[Mensagem], pizzaria: Pizzaria,
                      fase: str, plano_b: str) -> Saida:
     """Gera, confere com o verificador e tenta de novo uma vez se houver invenção."""
+    citados = valores_citados([m["texto"] for m in historico if m["papel"] == "cliente"])
     texto = llm.gerar(sistema, historico)
-    res = verificar(texto, pizzaria)
+    res = verificar(texto, pizzaria, citados)
     if res.ok:
         return Saida(texto, fase)
     aviso = (
@@ -43,7 +44,7 @@ def _com_verificacao(llm: LLM, sistema: str, historico: list[Mensagem], pizzaria
         + "). Responda de novo usando apenas os dados acima."
     )
     texto = llm.gerar(aviso, historico)
-    if verificar(texto, pizzaria).ok:
+    if verificar(texto, pizzaria, citados).ok:
         return Saida(texto, fase, tentativas=2, corrigida=True)
     return Saida(plano_b, fase, tentativas=2, corrigida=True)
 

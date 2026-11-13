@@ -83,3 +83,11 @@ def test_extracao_repetida_nao_duplica_itens(pizzaria):
     r = bot.responder("Adiciona uma coca lata")
     assert len(bot.pedido.pizzas) == 1
     assert "Subtotal: R$ 66,00" in r.texto
+
+
+def test_repetir_valor_do_cliente_nao_dispara_o_plano_b(pizzaria):
+    """Achado da 1ª avaliação real: o verificador barrava o R$ 50 que o próprio cliente disse."""
+    llm = llm_roteiro(textos=["Hoje não temos promoção de duas pizzas por R$ 50,00."])
+    r = Atendente(llm, pizzaria=pizzaria).responder("Tem promoção de duas pizzas por 50 reais? Quanto custa a pizza?")
+    assert not r.corrigida
+    assert "não temos promoção" in r.texto

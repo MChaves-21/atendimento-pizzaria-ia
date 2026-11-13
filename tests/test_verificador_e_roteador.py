@@ -52,3 +52,10 @@ def test_palavras_chave():
     assert por_palavras("Qual a taxa pro Benfica?") == "entrega"
     assert por_palavras("Quanto custa a pizza de frango?") == "cardapio"
     assert por_palavras("Boa noite") == "info"
+
+
+def test_valor_citado_pelo_cliente_nao_e_invencao(pizzaria):
+    from atendente.verificador import valores_citados
+    citados = valores_citados(["Tem promoção de duas pizzas por 50 reais?", "e por R$ 45,90?"])
+    assert citados == {50.0, 45.9}
+    assert verificar("Não temos promoção de duas por R$ 50,00.", pizzaria, citados).ok

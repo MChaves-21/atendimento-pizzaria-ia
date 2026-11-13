@@ -43,6 +43,18 @@ class Resultado:
         return m
 
 
+_REAIS = re.compile(r"(\d+(?:,\d{1,2})?)\s*(?:reais|real|conto)", re.IGNORECASE)
+
+
+def valores_citados(textos: list[str]) -> set[float]:
+    """Valores que o próprio cliente escreveu ("duas por 50 reais"): repetir não é inventar."""
+    valores: set[float] = set()
+    for t in textos:
+        valores |= {_valor(x) for x in _PRECO.findall(t)}
+        valores |= {_valor(x) for x in _REAIS.findall(t)}
+    return valores
+
+
 def verificar(resposta: str, pizzaria: Pizzaria, valores_permitidos: set[float] | None = None) -> Resultado:
     """`valores_permitidos`: totais calculados em código para a conversa atual."""
     permitidos = pizzaria.precos_conhecidos() | (valores_permitidos or set())

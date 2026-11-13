@@ -9,7 +9,7 @@ avaliada, sem IA julgando IA:
   ou bateu numa frase proibida do caso;
 - correta: não inventou e trouxe o que o caso exige (valor certo, negativa...).
 
-Saída em avaliacao/resultados/: respostas.csv, resumo.json, relatorio.md e grafico.png.
+Saída em avaliacao/resultados/<modelo>/: respostas.csv, resumo.json, relatorio.md e grafico.png.
 """
 
 from __future__ import annotations
@@ -26,7 +26,7 @@ from typing import Callable
 from atendente.atendente import Atendente
 from atendente.dados import Pizzaria, carregar, normalizar
 from atendente.llm import LLM, do_ambiente
-from atendente.verificador import _PRECO, _valor, verificar
+from atendente.verificador import _PRECO, _valor, valores_citados, verificar
 
 PASTA = Path(__file__).resolve().parent
 CASOS = PASTA / "casos.jsonl"
@@ -53,6 +53,7 @@ def avaliar_resposta(caso: dict, resposta: str, pizzaria: Pizzaria,
                      valores_extras: set[float] | None = None) -> tuple[bool, bool, list[str]]:
     """Devolve (inventou, correta, motivos)."""
     permitidos = set(caso.get("valores_corretos", [])) | (valores_extras or set())
+    permitidos |= valores_citados(caso["mensagens"])  # repetir o valor que o cliente disse não é inventar
     motivos: list[str] = []
 
     v = verificar(resposta, pizzaria, permitidos)
@@ -239,12 +240,11 @@ def main() -> None:
 
     casos = carregar_casos(args.casos)
     modelo = f"{os.getenv('LLM_PROVEDOR', 'gemini')}/{getattr(do_ambiente(), 'modelo', '?')}"
-    parcial = RESULTADOS / "parcial.jsonl"
-    meta = RESULTADOS / "parcial_modelo.txt"
-    if args.recomecar or (meta.exists() and meta.read_text().strip() != modelo):
-        parcial.unlink(missing_ok=True)  # outro modelo: não mistura resultados
-    RESULTADOS.mkdir(parents=True, exist_ok=True)
-    meta.write_text(modelo)
+    pasta = RESULTADOS / re.sub(r"[^a-z0-9.-]+", "_", modelo.lower())  # uma pasta por modelo
+    pasta.mkdir(parents=True, exist_ok=True)
+    parcial = pasta / "parcial.jsonl"
+    if args.recomecar:
+        parcial.unlink(missing_ok=True)
 
     completo = True
     try:
@@ -272,9 +272,9 @@ def main() -> None:
         "data": date.today().isoformat(),
     }
     resumo = resumir(comparaveis)
-    salvar(comparaveis, resumo, info)
+    salvar(comparaveis, resumo, info, pasta)
     print(json.dumps(resumo, ensure_ascii=False, indent=2))
-    print(f"\n{n_casos} de {len(casos)} casos. Relatório em {RESULTADOS / 'relatorio.md'}")
+    print(f"\n{n_casos} de {len(casos)} casos. Relatório em {pasta / 'relatorio.md'}")
 
 
 if __name__ == "__main__":
