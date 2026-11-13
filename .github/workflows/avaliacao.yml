@@ -1,0 +1,49 @@
+name: Avaliação com modelo real
+
+# Roda à mão (aba Actions → "Avaliação com modelo real" → Run workflow).
+# Precisa do secret GEMINI_API_KEY (ou GROQ_API_KEY) no repositório.
+on:
+  workflow_dispatch:
+    inputs:
+      provedor:
+        description: "gemini ou groq"
+        default: "gemini"
+      modelo:
+        description: "modelo (ex.: gemini-2.5-flash, llama-3.1-8b-instant)"
+        default: "gemini-2.5-flash"
+      pausa:
+        description: "segundos entre casos (limite do plano gratuito)"
+        default: "6"
+
+permissions:
+  contents: write
+
+jobs:
+  avaliar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Rodar a avaliação
+        env:
+          LLM_PROVEDOR: ${{ inputs.provedor }}
+          LLM_MODELO: ${{ inputs.modelo }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: python -m avaliacao.avaliar --pausa ${{ inputs.pausa }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: resultados
+          path: avaliacao/resultados/
+      - name: Salvar resultados no repositório
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add avaliacao/resultados
+          git commit -m "avaliação: resultados com ${{ inputs.provedor }}/${{ inputs.modelo }}" || echo "nada novo"
+          git push
