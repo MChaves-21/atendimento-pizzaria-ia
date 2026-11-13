@@ -48,10 +48,10 @@ O arquivo `avaliacao/casos.jsonl` tem **49 casos**: perguntas de cardápio, entr
 ```bash
 cp .env.example .env              # coloque sua chave (Gemini ou Groq, ambos com plano gratuito)
 export $(cat .env | xargs)
-python -m avaliacao.avaliar       # gera avaliacao/resultados/: relatorio.md, grafico.png, respostas.csv
+python -m avaliacao.avaliar       # gera avaliacao/resultados/<modelo>/: relatorio.md, respostas.csv...
 ```
 
-Se o limite diário do plano gratuito acabar no meio, o progresso fica salvo em `avaliacao/resultados/parcial.jsonl`: rode o mesmo comando depois e ele continua de onde parou. Também dá para rodar pelo GitHub Actions (workflow **Avaliação com modelo real**), com a chave como secret do repositório.
+Se o limite diário do plano gratuito acabar no meio, o progresso fica salvo em `avaliacao/resultados/<modelo>/parcial.jsonl`: rode o mesmo comando depois e ele continua de onde parou. Também dá para rodar pelo GitHub Actions (workflow **Avaliação com modelo real**), com a chave como secret do repositório.
 
 ### Resultados
 
