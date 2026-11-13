@@ -119,7 +119,8 @@ def pedido(llm: LLM, historico: list[Mensagem], pizzaria: Pizzaria, atual: ped.P
     return Saida(texto, "pedido"), atual
 
 
-PROMPT_EXTRACAO_BAIRRO = """Diga qual bairro o cliente citou na ÚLTIMA mensagem, ou null se não citou.
+PROMPT_EXTRACAO_BAIRRO = """Diga qual local de entrega o cliente citou na ÚLTIMA mensagem (bairro, cidade
+ou região, como ele escreveu), ou null se não citou nenhum. Não corrija nem troque o nome.
 Responda só com JSON: {"bairro": "nome ou null", "retirada": false}"""
 
 
@@ -137,7 +138,7 @@ def entrega(llm: LLM, historico: list[Mensagem], pizzaria: Pizzaria) -> Saida:
     taxa = pizzaria.taxa_entrega(bairro)
     if taxa is None:
         return Saida(
-            f"Ainda não entregamos no bairro {bairro}. "
+            f"Ainda não entregamos em {bairro}. "
             f"Atendemos: {', '.join(pizzaria.entrega['bairros'])}. Você também pode retirar no balcão.",
             "entrega",
         )

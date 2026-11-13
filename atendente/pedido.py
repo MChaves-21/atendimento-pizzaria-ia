@@ -90,7 +90,7 @@ def montar(bruto: dict, pizzaria: Pizzaria) -> Pedido:
         oficial = pizzaria.bairro_oficial(bruto["bairro"])
         if oficial is None:
             raise ErroPedido(
-                f"Ainda não entregamos no bairro {bruto['bairro']}. "
+                f"Ainda não entregamos em {bruto['bairro']}. "
                 "Você pode retirar no balcão, se preferir."
             )
         pedido.bairro = oficial
