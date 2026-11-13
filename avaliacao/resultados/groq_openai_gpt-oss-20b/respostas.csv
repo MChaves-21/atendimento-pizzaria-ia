@@ -1,0 +1,153 @@
+id,categoria,modo,resposta,inventou,correta,motivos
+card-01,cardapio,monolitico,"Olá! A pizza **Calabresa** no tamanho **G (8 fatias, 35 cm)** custa **R$ 60,00**. Se quiser combinar com alguma bebida ou adicionar borda recheada, é só me avisar! 🍕",False,True,
+card-01,cardapio,subagentes,"A pizza grande de calabresa custa R$ 60,00.",False,True,
+card-02,cardapio,monolitico,"Olá! O preço da **Quatro Queijos** na opção **Média (6 fatias)** é **R$ 54,00**.  
+
+Posso ajudar com mais alguma coisa?",False,True,
+card-02,cardapio,subagentes,"O preço da Quatro Queijos média é R$ 54,00.",False,True,
+card-03,cardapio,monolitico,"Olá! 👋  
+Sim, temos opções vegetarianas. Confira as nossas pizzas veggies:
+
+| ID | Nome | Ingredientes |
+|----|------|--------------|
+| **margherita** | Margherita | molho de tomate, muçarela, tomate e manjericão |
+| **quatro-queijos** | Quatro Queijos | muçarela, provolone, gorgonzola e parmesão |
+| **chocolate** | Chocolate com Morango | chocolate ao leite e morango |
+
+Quer saber os preços ou fazer um pedido? Estou à disposição!",False,True,
+card-03,cardapio,subagentes,"Sim, temos pizzas vegetarianas: Margherita, Quatro Queijos e Chocolate com Morango.  
+Cada uma está disponível nos tamanhos P (4 fatias), M (6 fatias) e G (8 fatias) com os preços indicados.  
+Qualquer dúvida adicional, é só falar!",False,True,
+card-04,cardapio,monolitico,"Olá! 👋  
+Na Pizzaria Bella Massa os tamanhos são:
+
+| Tamanho | Fatias | Diâmetro |
+|---------|--------|----------|
+| **P**   | 4 fatias | 25 cm |
+| **M**   | 6 fatias | 30 cm |
+| **G**   | 8 fatias | 35 cm |
+
+Posso ajudar com algo mais? Por exemplo, escolher um sabor ou montar seu pedido?",False,True,
+card-04,cardapio,subagentes,"Os tamanhos disponíveis são P, M e G.  
+P tem 4 fatias (25 cm), M tem 6 fatias (30 cm) e G tem 8 fatias (35 cm).  
+Qualquer dúvida, é só chamar!",False,True,
+card-05,cardapio,monolitico,"Olá! 👋  
+A pizza **Carne de Sol com Nata** vem com:
+
+- Carne de sol desfiada  
+- Nata  
+- Cebola caramelizada  
+
+Gostaria de adicionar essa pizza ao seu pedido ou tem mais alguma dúvida?",False,True,
+card-05,cardapio,subagentes,"A pizza de Carne de Sol com Nata contém carne de sol desfiada, nata e cebola caramelizada.  
+É uma opção saborosa e não vegetariana.",False,True,
+card-06,cardapio,monolitico,"Olá! 😊  
+Na Pizzaria Bella Massa temos uma opção de pizza doce: **Chocolate com Morango** (id: `chocolate`).  
+
+Você gostaria de ver o cardápio completo ou já tem alguma escolha em mente? Se quiser fazer um pedido, é só me dizer a pizza, o tamanho (P, M ou G) e se deseja borda recheada, e eu preparo tudo para você!",False,True,
+card-06,cardapio,subagentes,"Sim, temos a pizza doce Chocolate com Morango. Ela vem em P, M e G com preços R$ 36,00, R$ 48,00 e R$ 60,00. Qual tamanho você prefere?",False,True,
+card-07,cardapio,monolitico,"Olá! A borda recheada de catupiry ou cheddar custa **R$ 8,00**. Se quiser adicionar ao seu pedido, é só me avisar!",False,True,
+card-07,cardapio,subagentes,"A borda recheada de catupiry ou cheddar custa R$ 8,00.",False,True,
+card-08,cardapio,monolitico,"Olá! O refrigerante de 2 litros custa **R$ 14,00**. Precisa de mais alguma informação ou gostaria de fazer um pedido?",False,True,
+card-08,cardapio,subagentes,"O refrigerante de 2 litros custa R$ 14,00.",False,True,
+card-09,cardapio,monolitico,"Olá! 😊  
+Temos suco natural 500 ml com três opções deliciosas: **caju, acerola ou maracujá**.  
+
+Posso ajudar a montar seu pedido? Se quiser adicionar algum suco ou qualquer outra coisa, é só falar!",False,True,
+card-09,cardapio,subagentes,"Tem suco natural de caju, acerola ou maracujá, 500 ml, por R$ 9,00.",False,True,
+card-10,cardapio,monolitico,"Olá! 👋  
+A pizza **Frango com Catupiry** em tamanho **P** sai por **R$ 38,00**.  
+
+Posso ajudar com mais alguma coisa? Se quiser fazer um pedido, basta me dizer o sabor, tamanho, quantidade e se deseja algo extra (borda recheada, meio a meio, etc.). Estou à disposição!",False,True,
+card-10,cardapio,subagentes,"A pizza pequena de frango com catupiry sai por R$ 38,00. Posso ajudar em mais alguma coisa?",False,True,
+card-11,cardapio,monolitico,"Olá! 😊  
+No meio a meio, a pizza fica com o preço do **sabor mais caro** entre os dois que você escolher. Assim, se você combinar, por exemplo, Margherita (P) e Calabresa (M), o valor será o da Calabresa (M). Se for Margherita (M) e Frango com Catupiry (G), o preço será o da Frango com Catupiry (G).  
+
+Posso ajudar com mais alguma dúvida ou montar seu pedido?",False,True,
+card-11,cardapio,subagentes,"O meio a meio fica com o preço do sabor mais caro.  
+Assim, se escolher dois sabores diferentes, pagará o valor do que custar mais.  
+Qualquer dúvida sobre preços específicos, é só chamar!",False,True,
+peg-01,pegadinha,monolitico,"Olá! 👋  
+Não temos pizza de pepperoni no nosso cardápio, mas temos várias opções deliciosas, como Margherita, Calabresa, Frango com Catupiry, Quatro Queijos, Portuguesa, Carne de Sol com Nata e Chocolate com Morango.  
+
+Posso mostrar o cardápio completo ou ajudar a montar seu pedido? Se quiser, também posso informar os preços e as opções de tamanho (P, M ou G).  
+
+Qual a sua preferência?",False,True,
+peg-01,pegadinha,subagentes,"Desculpe, não temos pizza de pepperoni no cardápio. Se quiser, posso sugerir alguma das opções vegetarianas ou de carne que oferecemos.",False,True,
+peg-02,pegadinha,monolitico,"Desculpe, mas não temos a pizza de atum em nosso cardápio.  
+Você gostaria de conhecer alguma das opções disponíveis? Temos Margherita, Calabresa, Frango com Catupiry, Quatro Queijos, Portuguesa, Carne de Sol com Nata e Chocolate com Morango, em tamanhos P, M ou G.",False,True,
+peg-02,pegadinha,subagentes,"Desculpe, não temos pizza de atum no nosso cardápio.",False,True,
+peg-03,pegadinha,monolitico,"Olá! 😊  
+No nosso cardápio não temos pizza de camarão. Posso mostrar as opções disponíveis ou ajudar a montar um pedido com alguma outra pizza que você goste?",False,True,
+peg-03,pegadinha,subagentes,"Desculpe, não temos pizza de camarão no nosso cardápio.",False,True,
+peg-04,pegadinha,monolitico,"Olá! 😊  
+No momento, nossa pizzaria não oferece sushi. Se precisar de mais informações ou quiser fazer um pedido de pizza, estou aqui para ajudar. Se preferir, posso chamar um membro da equipe para esclarecer qualquer dúvida adicional. Como posso auxiliá‑lo hoje?",False,True,
+peg-04,pegadinha,subagentes,"Desculpe, não vendemos sushi.",False,True,
+peg-05,pegadinha,monolitico,"Desculpe, não temos cerveja no nosso cardápio. Vou chamar alguém da equipe para verificar se há alguma opção disponível. Enquanto isso, posso ajudar com algo mais?",False,True,
+peg-05,pegadinha,subagentes,"Desculpe, não temos cerveja no nosso cardápio.",False,True,
+peg-06,pegadinha,monolitico,"Olá! 😊  
+No nosso cardápio temos apenas os tamanhos **P (4 fatias)**, **M (6 fatias)** e **G (8 fatias)**.  
+Não há opção “família” nem “GG”.  
+
+Posso ajudar a escolher um dos tamanhos disponíveis ou combinar sabores? Se preferir, posso sugerir a pizza **G** ou algo que atenda ao seu pedido. Como posso atender você hoje?",False,True,
+peg-06,pegadinha,subagentes,"Desculpe, não temos pizza tamanho família nem tamanho GG.  
+Temos apenas os tamanhos P (4 fatias), M (6 fatias) e G (8 fatias).",False,True,
+peg-07,pegadinha,monolitico,"Desculpe, mas não temos uma pizza de bacon no nosso cardápio. Se quiser, posso mostrar as opções disponíveis ou ajudar a escolher outra pizza que possa agradar.",False,True,
+peg-07,pegadinha,subagentes,"Desculpe, não temos pizza de bacon no nosso cardápio.",False,True,
+peg-08,pegadinha,monolitico,"Olá! 👋  
+Desculpe, mas no momento não oferecemos pizza com massa sem glúten.  
+
+Posso ajudar com algo mais? Gostaria de conferir nosso cardápio ou fazer um pedido?",False,True,
+peg-08,pegadinha,subagentes,"Desculpe, não temos massa sem glúten.",False,True,
+peg-09,pegadinha,monolitico,"Desculpe, não temos lasanha no nosso cardápio. Posso ajudar com alguma pizza ou bebida? Vou chamar um membro da equipe para verificar outras opções para você.",False,True,
+peg-09,pegadinha,subagentes,"Desculpe, não temos lasanha no nosso cardápio.",False,True,
+peg-10,pegadinha,monolitico,"Olá! 😊
+
+No nosso cardápio não há uma pizza com rúcula e tomate seco. Se quiser, posso mostrar todas as opções que temos disponíveis ou ajudar a escolher outra pizza que combine com esses ingredientes. Como posso te ajudar?",False,True,
+peg-10,pegadinha,subagentes,"Desculpe, não temos pizza de rúcula com tomate seco no nosso cardápio.",False,True,
+peg-11,pegadinha,monolitico,"Olá! 😊  
+No momento não temos uma promoção de “duas pizzas por R$ 50”.  
+
+Posso ajudar a montar seu pedido? Se quiser, posso mostrar os sabores disponíveis, tamanhos e preços, ou já começar a fazer seu pedido. É só me dizer o que você gostaria!",False,True,
+peg-11,pegadinha,subagentes,"Desculpe, não temos essa promoção no momento.",False,True,
+info-01,info,monolitico,"Olá! 🤗  
+Não, a Pizzaria Bella Massa fica **fechada na segunda-feira**.  
+Estamos abertos de **terça a domingo** das 18:00 às 23:30.  
+
+Posso ajudar com algo mais? Se quiser fazer um pedido para outro dia ou horário, é só me dizer!",False,True,
+info-01,info,subagentes,"Não, fechamos na segunda-feira. Abra‑mos de terça a domingo, das 18:00 às 23:30. Se quiser fazer seu pedido, basta dizer o sabor e o tamanho!",False,True,
+info-02,info,monolitico,"Olá! 😊  
+A Pizzaria Bella Massa funciona de terça a domingo, das **18:00 às 23:30**.  
+Na segunda-feira estamos fechados.  
+
+Posso ajudar com algo mais? Gostaria de conhecer nosso cardápio ou fazer um pedido?",False,True,
+info-02,info,subagentes,"Funcionamos de terça a domingo, das 18h às 23h30. Fechamos na segunda-feira. Se precisar de mais alguma coisa, é só falar!",False,True,
+info-03,info,monolitico,"Olá! 👋  
+Sim, aceitamos Pix (também cartão de crédito, débito e dinheiro).  
+Como posso ajudar? Você já tem alguma pizza ou bebida em mente, ou prefere que eu mostre o cardápio?",False,True,
+info-03,info,subagentes,"Sim, aceitamos Pix! Também aceitamos cartão de crédito, cartão de débito e dinheiro. Se quiser fazer seu pedido, basta nos dizer o sabor e o tamanho da pizza.",False,True,
+info-04,info,monolitico,"Olá! 😊  
+O endereço da Pizzaria Bella Massa é:
+
+**Rua Fictícia, 123 – Aldeota, Fortaleza – CE**
+
+Se precisar de mais alguma informação ou quiser fazer um pedido, é só falar!",False,True,
+info-04,info,subagentes,"Olá! Nosso endereço é Rua Fictícia, 123 - Aldeota. Estamos abertos de terça a domingo, das 18:00 às 23:30. Se quiser fazer um pedido, é só me dizer o sabor e o tamanho!",False,True,
+info-05,info,monolitico,"Olá! Boa noite! 👋  
+Como posso ajudar você hoje na Pizzaria Bella Massa? Se quiser conhecer o cardápio, fazer um pedido ou tirar alguma dúvida, é só falar!",False,True,
+info-05,info,subagentes,"Boa noite! Como posso ajudar? Se quiser fazer um pedido, me diga o sabor e o tamanho.",False,True,
+ent-01,entrega,monolitico,"Olá! 😊  
+Sim, entregamos na Aldeota. A taxa de entrega para esse bairro é **R$ 6,00**.  
+
+Posso ajudar com mais alguma coisa?",False,True,
+ent-01,entrega,subagentes,"Entregamos em Aldeota, sim! Taxa de R$ 6,00 e tempo médio de 45 minutos.",False,True,
+ent-02,entrega,monolitico,"A taxa de entrega para o bairro **Benfica** é **R$ 9,00**. Se precisar fazer um pedido ou tiver mais alguma dúvida, é só falar!",False,True,
+ent-02,entrega,subagentes,"Entregamos só nestes bairros (taxa): Aldeota: R$ 6,00; Meireles: R$ 6,00; Dionísio Torres: R$ 7,00; Cocó: R$ 8,00; Papicu: R$ 8,00; Benfica: R$ 9,00; Fátima: R$ 7,00; Varjota: R$ 6,00. Tempo médio: 45 minutos. Retirada no balcão: Rua Fictícia, 123 - Aldeota.",False,True,
+ent-03,entrega,monolitico,"Olá! Infelizmente, não entregamos na Messejana. Podemos oferecer a retirada no balcão da nossa loja em Rua Fictícia, 123 – Aldeota, ou você pode escolher outro bairro da nossa lista de entrega. Se precisar de ajuda para escolher o pedido ou tiver alguma outra dúvida, é só falar!",False,True,
+ent-03,entrega,subagentes,"Ainda não entregamos no bairro Messejana. Atendemos: Aldeota, Meireles, Dionísio Torres, Cocó, Papicu, Benfica, Fátima, Varjota. Você também pode retirar no balcão.",False,True,
+ent-04,entrega,monolitico,"Olá! 😊  
+Desculpe, mas não entregamos no bairro Montese.  
+Podemos atender em Aldeota, Meireles, Dionísio Torres, Cocó, Papicu, Benfica, Fátima e Varjota. Se quiser fazer seu pedido em algum desses bairros ou retirar no balcão, é só me dizer!",False,True,
+ent-04,entrega,subagentes,"Ainda não entregamos no bairro Montese. Atendemos: Aldeota, Meireles, Dionísio Torres, Cocó, Papicu, Benfica, Fátima, Varjota. Você também pode retirar no balcão.",False,True,
+ent-05,entrega,monolitico,"Olá! O tempo médio de entrega da Pizzaria Bella Massa é de **45 minutos**. Se precisar de mais alguma informação ou quiser fazer seu pedido, é só falar!",False,True,
+ent-05,entrega,subagentes,"Entregamos só nestes bairros (taxa): Aldeota: R$ 6,00; Meireles: R$ 6,00; Dionísio Torres: R$ 7,00; Cocó: R$ 8,00; Papicu: R$ 8,00; Benfica: R$ 9,00; Fátima: R$ 7,00; Varjota: R$ 6,00. Tempo médio: 45 minutos. Retirada no balcão: Rua Fictícia, 123 - Aldeota.",False,True,
