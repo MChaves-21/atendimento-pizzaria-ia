@@ -69,7 +69,7 @@ class GeminiLLM(_ComRetentativa):
 
 
 class GroqLLM(_ComRetentativa):
-    def __init__(self, api_key: str, modelo: str = "llama-3.1-8b-instant", temperatura: float = 0.3):
+    def __init__(self, api_key: str, modelo: str = "openai/gpt-oss-120b", temperatura: float = 0.3):
         self.api_key, self.modelo, self.temperatura = api_key, modelo, temperatura
 
     def gerar(self, sistema: str, mensagens: list[Mensagem], json_mode: bool = False) -> str:
@@ -108,5 +108,5 @@ def do_ambiente() -> LLM:
     """Escolhe o modelo pelas variáveis de ambiente (LLM_PROVEDOR=gemini|groq)."""
     provedor = os.getenv("LLM_PROVEDOR", "gemini").lower()
     if provedor == "groq":
-        return GroqLLM(os.environ["GROQ_API_KEY"], os.getenv("LLM_MODELO", "llama-3.1-8b-instant"))
+        return GroqLLM(os.environ["GROQ_API_KEY"], os.getenv("LLM_MODELO", "openai/gpt-oss-120b"))
     return GeminiLLM(os.environ["GEMINI_API_KEY"], os.getenv("LLM_MODELO", "gemini-2.5-flash"))

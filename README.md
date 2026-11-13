@@ -3,7 +3,7 @@
 [![Testes](https://github.com/MChaves-21/atendimento-pizzaria-ia/actions/workflows/testes.yml/badge.svg)](https://github.com/MChaves-21/atendimento-pizzaria-ia/actions/workflows/testes.yml)
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 ![Gemini](https://img.shields.io/badge/Gemini-8E75B2?logo=googlegemini&logoColor=white)
-![Groq](https://img.shields.io/badge/Groq-Llama_3.1-F55036)
+![Groq](https://img.shields.io/badge/Groq-gpt--oss-F55036)
 
 Um assistente de IA que **inventa** preço, sabor ou bairro de entrega faz a empresa perder dinheiro e o cliente perder a confiança. Este projeto compara duas formas de montar o mesmo atendente e **mede** quantas respostas inventadas cada uma produz:
 
@@ -46,7 +46,7 @@ O arquivo `avaliacao/casos.jsonl` tem **49 casos**: perguntas de cardápio, entr
 - **Correta:** não inventou e trouxe o que o caso exige (o total certo, a negativa, o horário).
 
 ```bash
-cp .env.example .env              # coloque sua chave (Gemini ou Groq, ambos gratuitos)
+cp .env.example .env              # coloque sua chave (Gemini ou Groq, ambos com plano gratuito)
 export $(cat .env | xargs)
 python -m avaliacao.avaliar       # gera avaliacao/resultados/: relatorio.md, grafico.png, respostas.csv
 ```
@@ -55,7 +55,23 @@ Se o limite diário do plano gratuito acabar no meio, o progresso fica salvo em 
 
 ### Resultados
 
-_Ainda não rodei a avaliação com um modelo real. Quando rodar, o `relatorio.md` e o gráfico gerados entram aqui, com o modelo e a data._
+Modelo `openai/gpt-oss-120b` (via Groq), 49 casos, 13/11/2026 ([relatório completo](avaliacao/resultados/groq_openai_gpt-oss-120b/relatorio.md), [todas as respostas](avaliacao/resultados/groq_openai_gpt-oss-120b/respostas.csv)):
+
+| Versão | Respostas inventadas | Respostas corretas | Casos de pedido corretos |
+|---|---|---|---|
+| Prompt único | 0% | 98% (48 de 49) | 11 de 12 |
+| Subagentes + código + verificador | 0% | 98% (48 de 49) | **12 de 12** |
+
+**O que os números mostram:**
+
+- **Nenhuma das duas inventou.** Com um modelo atual e um cardápio pequeno, um prompt único bem escrito já segue os dados. Nos 49 casos, a vantagem dos subagentes não foi em alucinação.
+- **A diferença apareceu nas contas.** Em pedidos de mais de uma mensagem, o prompt único às vezes não fecha o total: pede quantidade, borda e bebida em vez de responder "Total: R$ 80,00" (caso `ped-03`; numa rodada anterior, o `ped-01`). Com os subagentes, o total sai do código: os 9 pedidos com conta saíram certos, e as 3 recusas também (meio a meio em pizza P, sabor inexistente, bairro fora da área).
+- **A avaliação achou falhas no meu próprio código**, que corrigi:
+  1. o verificador barrava o "R$ 50" que o **próprio cliente** tinha escrito e caía na resposta de reserva; agora valores citados pelo cliente são permitidos;
+  2. "Vocês entregam em Caucaia?" recebia a lista de bairros sem um "não", porque Caucaia é cidade, não bairro (caso `ent-07`, a única falha dos subagentes acima). Corrigido depois desta rodada.
+- **A régua também errou:** na primeira rodada, 4 respostas certas ("a lasanha não faz parte do cardápio", "não temos cerveja") foram contadas como erro, porque eu não tinha previsto essas formas de negar. Corrigi as regras antes da rodada acima.
+
+**Próximos passos:** completar a rodada com um modelo menor (`gpt-oss-20b`: 32 de 49 casos até agora, sem diferença entre as versões) e criar casos mais difíceis, com cardápio maior, conversas longas e troca de itens no meio do pedido. É onde um prompt único tende a se perder.
 
 ## 💬 Conversar pelo terminal
 
@@ -90,7 +106,7 @@ avaliacao/
   casos.jsonl      # 49 casos de teste
   avaliar.py       # roda as duas versões e gera o relatório
 dados/pizzaria.json
-tests/             # 51 testes com modelo simulado (rodam sem chave e sem internet)
+tests/             # 53 testes com modelo simulado (rodam sem chave e sem internet)
 ```
 
 ## ✅ Testes
@@ -103,4 +119,4 @@ Os testes usam um modelo **simulado**, então rodam no GitHub Actions sem chave 
 
 ## 🛠️ Tecnologias
 
-Python 3.12 · httpx · API do Gemini ou da Groq (Llama 3.1) · pytest · matplotlib · GitHub Actions
+Python 3.12 · httpx · API do Gemini ou da Groq (gpt-oss) · pytest · matplotlib · GitHub Actions

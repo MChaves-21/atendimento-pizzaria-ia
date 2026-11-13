@@ -10,7 +10,7 @@ on:
         description: "gemini ou groq"
         default: "gemini"
       modelo:
-        description: "modelo (ex.: gemini-2.5-flash, llama-3.1-8b-instant)"
+        description: "modelo (ex.: gemini-2.5-flash, openai/gpt-oss-120b)"
         default: "gemini-2.5-flash"
       pausa:
         description: "segundos entre casos (limite do plano gratuito)"
