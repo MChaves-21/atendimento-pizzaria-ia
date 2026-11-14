@@ -1,16 +1,16 @@
 {
   "execucao": {
     "modelo": "groq/openai/gpt-oss-20b",
-    "casos": 32,
+    "casos": 49,
     "total_casos": 49,
-    "completo": false,
-    "data": "2026-11-13"
+    "completo": true,
+    "data": "2026-11-14"
   },
   "resumo": {
     "monolitico": {
-      "casos": 32,
+      "casos": 49,
       "inventadas_pct": 0.0,
-      "corretas_pct": 100.0,
+      "corretas_pct": 95.9,
       "por_categoria": {
         "cardapio": {
           "inventadas_pct": 0.0,
@@ -20,9 +20,17 @@
           "inventadas_pct": 0.0,
           "corretas_pct": 100.0
         },
+        "humano": {
+          "inventadas_pct": 0.0,
+          "corretas_pct": 100.0
+        },
         "info": {
           "inventadas_pct": 0.0,
           "corretas_pct": 100.0
+        },
+        "pedido": {
+          "inventadas_pct": 0.0,
+          "corretas_pct": 83.3
         },
         "pegadinha": {
           "inventadas_pct": 0.0,
@@ -31,9 +39,9 @@
       }
     },
     "subagentes": {
-      "casos": 32,
+      "casos": 49,
       "inventadas_pct": 0.0,
-      "corretas_pct": 100.0,
+      "corretas_pct": 98.0,
       "por_categoria": {
         "cardapio": {
           "inventadas_pct": 0.0,
@@ -43,9 +51,17 @@
           "inventadas_pct": 0.0,
           "corretas_pct": 100.0
         },
+        "humano": {
+          "inventadas_pct": 0.0,
+          "corretas_pct": 100.0
+        },
         "info": {
           "inventadas_pct": 0.0,
           "corretas_pct": 100.0
+        },
+        "pedido": {
+          "inventadas_pct": 0.0,
+          "corretas_pct": 91.7
         },
         "pegadinha": {
           "inventadas_pct": 0.0,
