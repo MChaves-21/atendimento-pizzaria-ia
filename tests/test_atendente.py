@@ -93,29 +93,55 @@ def test_repetir_valor_do_cliente_nao_dispara_o_plano_b(pizzaria):
     assert "não temos promoção" in r.texto
 
 
-def test_bairro_sozinho_responde_a_pergunta_do_pedido_sem_passar_pelo_roteador(pizzaria):
-    """Caso ped-04 com gpt-oss-20b: o roteador mandou "Cocó" para o atendimento humano."""
+def _llm_que_erra_a_entrega(pedido: dict):
+    """Simula o gpt-oss-20b: o roteador manda o bairro para o humano e a reextração inventa bebida."""
     import json as _json
 
     from atendente.llm import LLMSimulado
 
-    pedido = {"pizzas": [{"sabores": ["frango com catupiry"], "tamanho": "M", "quantidade": 2}]}
-
     def responder(sistema, mensagens, json_mode):
         ultima = mensagens[-1]["texto"]
         if sistema.startswith("Você classifica"):
-            return _json.dumps({"fase": "pedido" if ultima.startswith("Quero") else "humano"})
-        if ultima == "Cocó":
-            return _json.dumps({**pedido, "bairro": "Cocó"})
-        return _json.dumps(pedido)
+            return _json.dumps({"fase": "pedido" if ultima.startswith(("Quero", "Uma")) else "humano"})
+        if sistema.startswith("Diga qual local"):
+            return _json.dumps({"bairro": ultima, "retirada": False})
+        if ultima.startswith(("Quero", "Uma")):
+            return _json.dumps(pedido)
+        return _json.dumps({**pedido, "bebidas": [{"nome": "refrigerante lata", "quantidade": 1}]})
 
-    llm = LLMSimulado(responder)
+    return LLMSimulado(responder)
+
+
+def test_bairro_sozinho_fecha_o_pedido_em_codigo(pizzaria):
+    """ped-04 com gpt-oss-20b: "Cocó" foi para o humano; depois, a reextração inventou uma coca."""
+    pedido = {"pizzas": [{"sabores": ["frango com catupiry"], "tamanho": "M", "quantidade": 2}]}
+    llm = _llm_que_erra_a_entrega(pedido)
     bot = Atendente(llm, pizzaria=pizzaria)
     bot.responder("Quero 2 pizzas M de frango com catupiry")
+    n = len(llm.chamadas)
     r = bot.responder("Cocó")
     assert r.fase == "pedido"
     assert "Total: R$ 112,00" in r.texto
-    assert not any(c["sistema"].startswith("Você classifica") for c in llm.chamadas[2:])
+    assert "Refrigerante" not in r.texto
+    assert len(llm.chamadas) == n  # nenhuma chamada à IA
+
+
+def test_retirada_fecha_o_pedido_em_codigo(pizzaria):
+    llm = _llm_que_erra_a_entrega({"pizzas": [{"sabores": ["calabresa"], "tamanho": "G"}]})
+    bot = Atendente(llm, pizzaria=pizzaria)
+    bot.responder("Quero uma G de calabresa")
+    r = bot.responder("Vou retirar no balcão")
+    assert "Total: R$ 60,00" in r.texto
+
+
+def test_bairro_fora_da_area_com_pedido_em_andamento(pizzaria):
+    """ped-12 com gpt-oss-20b: "Messejana" virou resumo do pedido, sem dizer que não entregamos."""
+    llm = _llm_que_erra_a_entrega({"pizzas": [{"sabores": ["calabresa"], "tamanho": "M"}]})
+    bot = Atendente(llm, pizzaria=pizzaria)
+    bot.responder("Quero uma M de calabresa")
+    r = bot.responder("Messejana")
+    assert r.fase == "entrega"
+    assert "Ainda não entregamos em Messejana" in r.texto
 
 
 def test_bairro_no_texto(pizzaria):

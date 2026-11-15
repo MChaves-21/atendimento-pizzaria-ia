@@ -83,6 +83,7 @@ Responda só com JSON neste formato:
   "retirada": false,
   "finalizar": false
 }
+Inclua só o que o cliente pediu: sem bebida pedida, "bebidas": []. Sem bairro citado, "bairro": null.
 Meio a meio = dois sabores na mesma pizza. "finalizar" = true quando o cliente diz que é só isso / pode fechar.
 Sabores do cardápio: {sabores}. Bebidas: {bebidas}."""
 
@@ -109,14 +110,19 @@ def pedido(llm: LLM, historico: list[Mensagem], pizzaria: Pizzaria, atual: ped.P
     if novo.bairro or novo.retirada:
         atual.bairro, atual.retirada = novo.bairro, novo.retirada
 
+    return Saida(texto_pedido(atual, pizzaria, bool(bruto.get("finalizar"))), "pedido"), atual
+
+
+def texto_pedido(atual: ped.Pedido, pizzaria: Pizzaria, finalizar: bool = False) -> str:
+    """Resumo do pedido e a próxima pergunta, tudo em código."""
     texto = "Anotado! Seu pedido até agora:\n" + ped.resumo(atual, pizzaria)
     if not atual.bairro and not atual.retirada:
         texto += "\nÉ para entrega (em qual bairro?) ou retirada no balcão?"
-    elif bruto.get("finalizar"):
+    elif finalizar:
         texto += f"\nPedido confirmado! Tempo médio de {pizzaria.entrega['tempo_medio_min']} minutos."
     else:
         texto += "\nDeseja mais alguma coisa?"
-    return Saida(texto, "pedido"), atual
+    return texto
 
 
 PROMPT_EXTRACAO_BAIRRO = """Diga qual local de entrega o cliente citou na ÚLTIMA mensagem (bairro, cidade
@@ -124,16 +130,24 @@ ou região, como ele escreveu), ou null se não citou nenhum. Não corrija nem t
 Responda só com JSON: {"bairro": "nome ou null", "retirada": false}"""
 
 
-def entrega(llm: LLM, historico: list[Mensagem], pizzaria: Pizzaria) -> Saida:
+def extrair_local(llm: LLM, historico: list[Mensagem]) -> dict:
+    """{"bairro": ..., "retirada": ...} citado na última mensagem (a IA só lê; quem decide é o código)."""
     try:
         dados = extrair_json(llm.gerar(PROMPT_EXTRACAO_BAIRRO, historico[-2:], json_mode=True))
     except Exception:
         dados = {}
+    bairro = dados.get("bairro")
+    if not bairro or str(bairro).lower() == "null":
+        bairro = None
+    return {"bairro": bairro, "retirada": bool(dados.get("retirada"))}
+
+
+def entrega(dados: dict, pizzaria: Pizzaria) -> Saida:
     tempo = pizzaria.entrega["tempo_medio_min"]
     if dados.get("retirada"):
         return Saida(f"Pode retirar no balcão, sem taxa: {pizzaria.entrega['endereco_loja']}.", "entrega")
     bairro = dados.get("bairro")
-    if not bairro or str(bairro).lower() == "null":
+    if not bairro:
         return Saida(pizzaria.texto_entrega(), "entrega")
     taxa = pizzaria.taxa_entrega(bairro)
     if taxa is None:

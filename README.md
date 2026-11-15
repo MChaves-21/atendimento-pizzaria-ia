@@ -110,7 +110,7 @@ avaliacao/
   casos.jsonl      # 49 casos de teste
   avaliar.py       # roda as duas versões e gera o relatório
 dados/pizzaria.json
-tests/             # 56 testes com modelo simulado (rodam sem chave e sem internet)
+tests/             # 58 testes com modelo simulado (rodam sem chave e sem internet)
 ```
 
 ## ✅ Testes

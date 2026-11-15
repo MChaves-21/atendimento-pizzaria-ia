@@ -54,30 +54,47 @@ class Atendente:
         self.historico.append({"papel": "atendente", "texto": r.texto})
         return r
 
-    def _aguardando_entrega(self, texto: str) -> bool:
-        """Há pedido em andamento esperando "entrega ou retirada?" e o cliente respondeu isso."""
-        if not self.pedido.pizzas or self.pedido.bairro or self.pedido.retirada:
-            return False
-        t = normalizar(texto)
-        return bool(self.pizzaria.bairro_no_texto(texto)) or any(
-            p in t for p in ("retir", "balcao", "vou buscar", "busco ai")
-        )
+    def _esperando_entrega(self) -> bool:
+        """Há pedido em andamento e o bot perguntou "entrega ou retirada?"."""
+        return bool(self.pedido.pizzas) and not self.pedido.bairro and not self.pedido.retirada
+
+    def _fechar_entrega(self, bairro: str | None, retirada: bool) -> Resposta:
+        """Completa o pedido em código: a IA não reextrai os itens (o modelo menor inventava bebida)."""
+        self.pedido.bairro, self.pedido.retirada = bairro, retirada
+        return Resposta(subagentes.texto_pedido(self.pedido, self.pizzaria), "pedido")
 
     def _subagentes(self) -> Resposta:
         z = self.pizzaria
-        if self._aguardando_entrega(self.historico[-1]["texto"]):
-            # "Cocó" sozinho confundia o roteador (já foi parar no atendimento humano);
-            # se é a resposta à pergunta que o próprio bot fez, nem precisa classificar
-            fase = "pedido"
-        else:
-            fase = roteador.classificar(self.llm, self.historico)
+        texto = self.historico[-1]["texto"]
+        t = normalizar(texto)
+
+        cita_item = roteador.por_palavras(texto) == "pedido" or any(
+            normalizar(p.nome) in t for p in z.pizzas
+        ) or z._bebida_por_apelido(t) is not None
+        if self._esperando_entrega() and not cita_item:  # "mais uma coca, é na Aldeota" segue para a IA
+            # "Cocó" sozinho confundia o roteador (já foi parar no atendimento humano)
+            # e a reextração do pedido (o modelo menor achou que "Papicu" era sabor).
+            # Se é a resposta à pergunta que o próprio bot fez, o código resolve.
+            bairro = z.bairro_no_texto(texto)
+            if bairro:
+                return self._fechar_entrega(bairro, False)
+            if any(p in t for p in ("retir", "balcao", "vou buscar", "busco ai")):
+                return self._fechar_entrega(None, True)
+
+        fase = roteador.classificar(self.llm, self.historico)
+        if self._esperando_entrega() and not cita_item and len(t.split()) <= 4 \
+                and roteador.por_palavras(texto) not in ("cardapio", "humano"):
+            # resposta curta à pergunta do bairro, com um bairro que não atendemos ("Messejana")
+            fase = "entrega"
+
         if fase == "pedido":
             saida, self.pedido = subagentes.pedido(self.llm, self.historico, z, self.pedido)
         elif fase == "entrega":
-            saida = subagentes.entrega(self.llm, self.historico, z)
-            # "Aldeota" respondendo a "é para entrega ou retirada?" completa o pedido em andamento
-            if self.pedido.pizzas and not self.pedido.bairro and not self.pedido.retirada:
-                saida, self.pedido = subagentes.pedido(self.llm, self.historico, z, self.pedido)
+            local = subagentes.extrair_local(self.llm, self.historico)
+            atendido = z.bairro_oficial(local["bairro"]) if local.get("bairro") else None
+            if self._esperando_entrega() and (atendido or local.get("retirada")):
+                return self._fechar_entrega(atendido, bool(local.get("retirada")) and not atendido)
+            saida = subagentes.entrega(local, z)
         elif fase == "cardapio":
             saida = subagentes.cardapio(self.llm, self.historico, z)
         elif fase == "humano":
