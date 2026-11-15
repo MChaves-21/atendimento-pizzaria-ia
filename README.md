@@ -55,23 +55,27 @@ Se o limite diário do plano gratuito acabar no meio, o progresso fica salvo em 
 
 ### Resultados
 
-Modelo `openai/gpt-oss-120b` (via Groq), 49 casos, 13/11/2026 ([relatório completo](avaliacao/resultados/groq_openai_gpt-oss-120b/relatorio.md), [todas as respostas](avaliacao/resultados/groq_openai_gpt-oss-120b/respostas.csv)):
+Duas rodadas completas, 49 casos cada, com modelos via Groq ([relatório do 120b](avaliacao/resultados/groq_openai_gpt-oss-120b/relatorio.md), [relatório do 20b](avaliacao/resultados/groq_openai_gpt-oss-20b/relatorio.md); todas as respostas ficam no `respostas.csv` de cada pasta):
 
-| Versão | Respostas inventadas | Respostas corretas | Casos de pedido corretos |
-|---|---|---|---|
-| Prompt único | 0% | 98% (48 de 49) | 11 de 12 |
-| Subagentes + código + verificador | 0% | 98% (48 de 49) | **12 de 12** |
+| Modelo | Versão | Respostas inventadas | Respostas corretas | Casos de pedido corretos |
+|---|---|---|---|---|
+| `gpt-oss-120b` (13/11/2026) | Prompt único | 0% | 98% (48 de 49) | 11 de 12 |
+| | Subagentes + código + verificador | 0% | 98% (48 de 49) | **12 de 12** |
+| `gpt-oss-20b` (14/11/2026) | Prompt único | 0% | 98% (48 de 49) | 11 de 12 |
+| | Subagentes + código + verificador | 0% | 98% (48 de 49) | 11 de 12 |
 
 **O que os números mostram:**
 
-- **Nenhuma das duas inventou.** Com um modelo atual e um cardápio pequeno, um prompt único bem escrito já segue os dados. Nos 49 casos, a vantagem dos subagentes não foi em alucinação.
-- **A diferença apareceu nas contas.** Em pedidos de mais de uma mensagem, o prompt único às vezes não fecha o total: pede quantidade, borda e bebida em vez de responder "Total: R$ 80,00" (caso `ped-03`; numa rodada anterior, o `ped-01`). Com os subagentes, o total sai do código: os 9 pedidos com conta saíram certos, e as 3 recusas também (meio a meio em pizza P, sabor inexistente, bairro fora da área).
-- **A avaliação achou falhas no meu próprio código**, que corrigi:
+- **Nenhuma das duas inventou, nem com o modelo menor.** Com um cardápio pequeno, um prompt único bem escrito já segue os dados. Nos 98 casos de cada versão, a vantagem dos subagentes não foi em alucinação.
+- **As falhas foram de outro tipo.** O prompt único às vezes não fecha a conta: pede borda e bebida em vez de dar o total (`ped-03` no 120b) ou devolve uma resposta vazia (`ped-02` no 20b). Nos subagentes, o total sai do código e nunca veio errado; quando falharam, foi por **roteamento**: no 20b, o cliente respondeu só "Cocó" à pergunta do bairro e o roteador mandou para o atendimento humano (`ped-04`).
+- **A avaliação achou falhas no meu próprio código**, que corrigi (com teste para cada uma):
   1. o verificador barrava o "R$ 50" que o **próprio cliente** tinha escrito e caía na resposta de reserva; agora valores citados pelo cliente são permitidos;
-  2. "Vocês entregam em Caucaia?" recebia a lista de bairros sem um "não", porque Caucaia é cidade, não bairro (caso `ent-07`, a única falha dos subagentes acima). Corrigido depois desta rodada.
-- **A régua também errou:** na primeira rodada, 4 respostas certas ("a lasanha não faz parte do cardápio", "não temos cerveja") foram contadas como erro, porque eu não tinha previsto essas formas de negar. Corrigi as regras antes da rodada acima.
+  2. "Vocês entregam em Caucaia?" recebia a lista de bairros sem um "não", porque Caucaia é cidade, não bairro (`ent-07`, falha dos subagentes no 120b). Corrigido antes da rodada do 20b, que já acertou esse caso;
+  3. o `ped-04` acima: se há pedido em andamento esperando "entrega ou retirada?" e o cliente cita um bairro atendido ou a retirada, a mensagem vai direto para o pedido, sem passar pelo roteador. Corrigido depois da rodada do 20b;
+  4. resposta vazia do modelo agora gera uma nova tentativa.
+- **A régua também errou, duas vezes:** na primeira rodada, 4 respostas certas ("a lasanha não faz parte do cardápio") foram contadas como erro, porque eu não tinha previsto essas formas de negar; no 20b, "meio a meio só em **M** ou **G**" foi contado como erro por causa do negrito (`ped-10`). Corrigi as regras e reavaliei as respostas já salvas do 20b, sem chamar o modelo de novo.
 
-**Próximos passos:** completar a rodada com um modelo menor (`gpt-oss-20b`: 32 de 49 casos até agora, sem diferença entre as versões) e criar casos mais difíceis, com cardápio maior, conversas longas e troca de itens no meio do pedido. É onde um prompt único tende a se perder.
+**Próximos passos:** rodar de novo com as correções e criar casos mais difíceis, com cardápio maior, conversas longas e troca de itens no meio do pedido. É onde um prompt único tende a se perder.
 
 ## 💬 Conversar pelo terminal
 
@@ -106,7 +110,7 @@ avaliacao/
   casos.jsonl      # 49 casos de teste
   avaliar.py       # roda as duas versões e gera o relatório
 dados/pizzaria.json
-tests/             # 53 testes com modelo simulado (rodam sem chave e sem internet)
+tests/             # 56 testes com modelo simulado (rodam sem chave e sem internet)
 ```
 
 ## ✅ Testes

@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 
 from . import monolitico, roteador, subagentes
 from . import pedido as ped
-from .dados import Pizzaria, carregar
+from .dados import Pizzaria, carregar, normalizar
 from .llm import LLM, Mensagem
 
 
@@ -54,9 +54,23 @@ class Atendente:
         self.historico.append({"papel": "atendente", "texto": r.texto})
         return r
 
+    def _aguardando_entrega(self, texto: str) -> bool:
+        """Há pedido em andamento esperando "entrega ou retirada?" e o cliente respondeu isso."""
+        if not self.pedido.pizzas or self.pedido.bairro or self.pedido.retirada:
+            return False
+        t = normalizar(texto)
+        return bool(self.pizzaria.bairro_no_texto(texto)) or any(
+            p in t for p in ("retir", "balcao", "vou buscar", "busco ai")
+        )
+
     def _subagentes(self) -> Resposta:
-        fase = roteador.classificar(self.llm, self.historico)
         z = self.pizzaria
+        if self._aguardando_entrega(self.historico[-1]["texto"]):
+            # "Cocó" sozinho confundia o roteador (já foi parar no atendimento humano);
+            # se é a resposta à pergunta que o próprio bot fez, nem precisa classificar
+            fase = "pedido"
+        else:
+            fase = roteador.classificar(self.llm, self.historico)
         if fase == "pedido":
             saida, self.pedido = subagentes.pedido(self.llm, self.historico, z, self.pedido)
         elif fase == "entrega":

@@ -59,7 +59,8 @@ def avaliar_resposta(caso: dict, resposta: str, pizzaria: Pizzaria,
     v = verificar(resposta, pizzaria, permitidos)
     motivos += v.motivos()
 
-    texto = normalizar(resposta)
+    # sem a marcação de negrito/itálico: "**M** ou **G**" tem que valer como "M ou G"
+    texto = normalizar(re.sub(r"[*_`]+", "", resposta))
     for padrao in caso.get("nao_deve_conter", []):
         if re.search(padrao, texto):
             motivos.append(f"frase proibida: {padrao}")

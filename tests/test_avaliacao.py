@@ -101,3 +101,10 @@ def test_avaliacao_retoma_de_onde_parou(pizzaria, tmp_path):
     notas = rodar(lambda: LLMSimulado(responder), ["monolitico", "subagentes"], casos, parcial=parcial)
     assert len(notas) == 6
     assert len({(n.id, n.modo) for n in notas}) == 6  # nada repetido
+
+
+def test_negrito_nao_atrapalha_a_regua(pizzaria):
+    caso = {"id": "x", "categoria": "pedido", "mensagens": ["Quero uma pizza P meio margherita meio calabresa"],
+            "deve_conter_algum": ["m ou g"]}
+    _, correta, _ = avaliar_resposta(caso, "O meio a meio só está disponível para pizzas **M** ou **G**.", pizzaria)
+    assert correta

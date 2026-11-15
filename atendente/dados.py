@@ -7,6 +7,7 @@ Preços, taxas e horários saem sempre daqui. A IA nunca faz conta nem
 from __future__ import annotations
 
 import json
+import re
 import unicodedata
 from dataclasses import dataclass
 from functools import lru_cache
@@ -91,6 +92,14 @@ class Pizzaria:
         alvo = normalizar(bairro)
         for nome in self.entrega["bairros"]:
             if normalizar(nome) == alvo:
+                return nome
+        return None
+
+    def bairro_no_texto(self, texto: str) -> str | None:
+        """'Cocó', 'é no Meireles' -> nome oficial do bairro atendido citado no texto."""
+        t = normalizar(texto)
+        for nome in self.entrega["bairros"]:
+            if re.search(rf"\b{re.escape(normalizar(nome))}\b", t):
                 return nome
         return None
 

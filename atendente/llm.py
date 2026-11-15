@@ -84,12 +84,18 @@ class GroqLLM(_ComRetentativa):
         }
         if json_mode:
             corpo["response_format"] = {"type": "json_object"}
-        dados = self._post(
-            "https://api.groq.com/openai/v1/chat/completions",
-            headers={"Authorization": f"Bearer {self.api_key}"},
-            json=corpo,
-        )
-        return dados["choices"][0]["message"]["content"]
+        # modelos com raciocínio às vezes devolvem a resposta vazia; uma nova tentativa costuma resolver
+        texto = ""
+        for _ in range(2):
+            dados = self._post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers={"Authorization": f"Bearer {self.api_key}"},
+                json=corpo,
+            )
+            texto = (dados["choices"][0]["message"].get("content") or "").strip()
+            if texto:
+                break
+        return texto
 
 
 class LLMSimulado:

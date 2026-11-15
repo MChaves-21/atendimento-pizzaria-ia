@@ -91,3 +91,35 @@ def test_repetir_valor_do_cliente_nao_dispara_o_plano_b(pizzaria):
     r = Atendente(llm, pizzaria=pizzaria).responder("Tem promoção de duas pizzas por 50 reais? Quanto custa a pizza?")
     assert not r.corrigida
     assert "não temos promoção" in r.texto
+
+
+def test_bairro_sozinho_responde_a_pergunta_do_pedido_sem_passar_pelo_roteador(pizzaria):
+    """Caso ped-04 com gpt-oss-20b: o roteador mandou "Cocó" para o atendimento humano."""
+    import json as _json
+
+    from atendente.llm import LLMSimulado
+
+    pedido = {"pizzas": [{"sabores": ["frango com catupiry"], "tamanho": "M", "quantidade": 2}]}
+
+    def responder(sistema, mensagens, json_mode):
+        ultima = mensagens[-1]["texto"]
+        if sistema.startswith("Você classifica"):
+            return _json.dumps({"fase": "pedido" if ultima.startswith("Quero") else "humano"})
+        if ultima == "Cocó":
+            return _json.dumps({**pedido, "bairro": "Cocó"})
+        return _json.dumps(pedido)
+
+    llm = LLMSimulado(responder)
+    bot = Atendente(llm, pizzaria=pizzaria)
+    bot.responder("Quero 2 pizzas M de frango com catupiry")
+    r = bot.responder("Cocó")
+    assert r.fase == "pedido"
+    assert "Total: R$ 112,00" in r.texto
+    assert not any(c["sistema"].startswith("Você classifica") for c in llm.chamadas[2:])
+
+
+def test_bairro_no_texto(pizzaria):
+    assert pizzaria.bairro_no_texto("é no Cocó") == "Cocó"
+    assert pizzaria.bairro_no_texto("fatima") == "Fátima"
+    assert pizzaria.bairro_no_texto("coco ralado") == "Cocó"  # o roteador só é pulado com pedido em andamento
+    assert pizzaria.bairro_no_texto("Caucaia") is None

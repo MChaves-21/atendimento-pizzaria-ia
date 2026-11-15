@@ -4,13 +4,14 @@
     "casos": 49,
     "total_casos": 49,
     "completo": true,
-    "data": "2026-11-14"
+    "data": "2026-11-14",
+    "regua_corrigida": "2026-11-15"
   },
   "resumo": {
     "monolitico": {
       "casos": 49,
       "inventadas_pct": 0.0,
-      "corretas_pct": 95.9,
+      "corretas_pct": 98.0,
       "por_categoria": {
         "cardapio": {
           "inventadas_pct": 0.0,
@@ -30,7 +31,7 @@
         },
         "pedido": {
           "inventadas_pct": 0.0,
-          "corretas_pct": 83.3
+          "corretas_pct": 91.7
         },
         "pegadinha": {
           "inventadas_pct": 0.0,
