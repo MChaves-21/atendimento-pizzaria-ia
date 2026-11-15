@@ -1,0 +1,73 @@
+{
+  "execucao": {
+    "modelo": "groq/openai/gpt-oss-20b",
+    "casos": 49,
+    "total_casos": 49,
+    "completo": true,
+    "data": "2026-11-15"
+  },
+  "resumo": {
+    "monolitico": {
+      "casos": 49,
+      "inventadas_pct": 0.0,
+      "corretas_pct": 95.9,
+      "por_categoria": {
+        "cardapio": {
+          "inventadas_pct": 0.0,
+          "corretas_pct": 100.0
+        },
+        "entrega": {
+          "inventadas_pct": 0.0,
+          "corretas_pct": 100.0
+        },
+        "humano": {
+          "inventadas_pct": 0.0,
+          "corretas_pct": 100.0
+        },
+        "info": {
+          "inventadas_pct": 0.0,
+          "corretas_pct": 100.0
+        },
+        "pedido": {
+          "inventadas_pct": 0.0,
+          "corretas_pct": 83.3
+        },
+        "pegadinha": {
+          "inventadas_pct": 0.0,
+          "corretas_pct": 100.0
+        }
+      }
+    },
+    "subagentes": {
+      "casos": 49,
+      "inventadas_pct": 0.0,
+      "corretas_pct": 93.9,
+      "por_categoria": {
+        "cardapio": {
+          "inventadas_pct": 0.0,
+          "corretas_pct": 100.0
+        },
+        "entrega": {
+          "inventadas_pct": 0.0,
+          "corretas_pct": 100.0
+        },
+        "humano": {
+          "inventadas_pct": 0.0,
+          "corretas_pct": 100.0
+        },
+        "info": {
+          "inventadas_pct": 0.0,
+          "corretas_pct": 100.0
+        },
+        "pedido": {
+          "inventadas_pct": 0.0,
+          "corretas_pct": 75.0
+        },
+        "pegadinha": {
+          "inventadas_pct": 0.0,
+          "corretas_pct": 100.0
+        }
+      }
+    }
+  }
+}
