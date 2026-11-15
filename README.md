@@ -55,7 +55,7 @@ Se o limite diário do plano gratuito acabar no meio, o progresso fica salvo em 
 
 ### Resultados
 
-Duas rodadas completas, 49 casos cada, com modelos via Groq ([relatório do 120b](avaliacao/resultados/groq_openai_gpt-oss-120b/relatorio.md), [relatório do 20b](avaliacao/resultados/groq_openai_gpt-oss-20b/relatorio.md); todas as respostas ficam no `respostas.csv` de cada pasta):
+Duas rodadas completas, 49 casos cada, com modelos via Groq ([relatório do 120b](avaliacao/resultados/groq_openai_gpt-oss-120b/relatorio.md), [relatório do 20b](avaliacao/resultados/historico/2026-11-14_groq_openai_gpt-oss-20b/relatorio.md); todas as respostas ficam no `respostas.csv` de cada pasta):
 
 | Modelo | Versão | Respostas inventadas | Respostas corretas | Casos de pedido corretos |
 |---|---|---|---|---|
